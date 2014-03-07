@@ -1,0 +1,7 @@
+
+.rvk_accordion a{color:#000;display:block;text-decoration:none;}
+.rvk_accordion a:hover{}
+.rvk_accordion ul {list-style-type:none; padding: 3px;} 
+#rvk_accordion div{height:0;overflow:hidden; }
+#rvk_accordion div:target{height:auto; width:auto; border:  1px solid #D4D4D4;}
+
