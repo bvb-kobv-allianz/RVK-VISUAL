@@ -123,4 +123,4 @@ Der Code gemeinsam mit einer Kurzdokumentation wird freigegeben unter der Lizenz
 
 
 Anhang
-Kurzdokumentation der RVK-API unter: http://rvk.uni-regensburg.de/api/
+Kurzdokumentation der RVK-API unter: http://rvk.uni-regensburg.de/api/ 
