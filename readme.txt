@@ -8,8 +8,8 @@ Visualisierung von RVK-Notationen mittels Javascript
 
 Projektbeschreibung "Contentvisualisierung für Bibliothekskataloge"<p>
 
-Bereits seit Ende der 2000er Jahre wurde im Bibliotheksumfeld unter dem Stichwort Katalog 2.0 verschiedene Verfahren zur verbesserten Präsentation von hochwertigen Kataloginhalten thematisiert. Contentvisualisierung ist hierbei 
-unterstützendes Werkzeug zur Wissensexploration und zur Eingrenzung von Suchergebnissen.
+Bereits seit Ende der 2000er Jahre wurde im Bibliotheksumfeld unter dem Stichwort Katalog 2.0 verschiedene Verfahren zur verbesserten Präsentation von hochwertigen Kataloginhalten thematisiert.
+Contentvisualisierung ist hierbei unterstützendes Werkzeug zur Wissensexploration und zur Eingrenzung von Suchergebnissen.
 Mit der Regensburger Verbundklassifikation (RVK) kann eine Bibliothek ihren Bestand nach Sachgebieten gegliedert aufstellen. Die RVK ist mittlerweile in 33 Fachgebieten hierarchisch geordnet, die vergebenen Notationen sind vier- 
 bis fünfstellig. Die Zahlenkombination allein ist aber für den Nutzer oft wenig verständlich. Hier setzte das Projekt an und entwickelte eine Möglichkeit, die Notationen für den Nutzer unabhängig vom Bibliothekssystem klarer zu 
 visualisieren: Mit Hilfe eines Javascript-Snippets und der von der UB-Regensburg angebotenen RVK-API kann dem Nutzer der Klarname der Notation und erweitert der gesamte RVK-Notationsbaum mit allen Abhägigkeiten angezeigt werden.
@@ -18,16 +18,19 @@ visualisieren: Mit Hilfe eines Javascript-Snippets und der von der UB-Regensburg
 
 Projektträger
 
-Bayerische Bibliotheksverbund (BVB), Kooperative Bibliotheksverbund Berlin-Brandenburg (KOBV)
-Die Realisierung des Projekts erfolgt im Rahmen der gemeinsamen Entwicklungsprojekte der strategischen Allianz (Dez. 2007) zwischen KOBV und BVB.
+Die Realisierung des Projekts erfolgt im Rahmen der gemeinsamen Entwicklungsprojekte der strategischen Allianz (Dez. 2007) zwischen Bayerischem Bibliotheksverbund (BVB) und Kooperativem Bibliotheksverbund Berlin-Brandenburg (KOBV).
 
 Arbeitsverteilung im Projekt
-- Erstellung von Links zur direkten Nachrecherche (Lateralsuche) von RVK-Notationen --> BVB, 2011
-- textliche Visualisierung der RVK-Notation durch ein Javascript-Snippet --> BVB, 2011
-- Generalisierung des Javascript-Codes --> KOBV, 2012
-- Anpassungen des Codes an die RVK-API (Live-Schaltung Juni 2013) --> KOBV, 2013
-- Test des Codes mit verschiedenen Bibliotheken (UB Regensburg, TU Berlin) --> KOBV, 2013
-- Veröffentlichung, Dokumentation --> KOBV, 2014
+
+Bayerische Bibliotheksverbund (BVB)
+- Erstellung von Links zur direkten Nachrecherche (Lateralsuche) von RVK-Notationen
+- textliche Visualisierung der RVK-Notation durch ein Javascript-Snippet
+
+Kooperative Bibliotheksverbund Berlin-Brandenburg (KOBV)
+- Generalisierung des Javascript-Codes
+- Anpassungen des Codes an die RVK-API (Live-Schaltung Juni 2013)
+- Test des Codes mit verschiedenen Bibliotheken (UB Regensburg, TU Berlin)
+- Veröffentlichung, Dokumentation
 
 
 
@@ -67,7 +70,6 @@ Für die Auflösung der Notationen muss die RVK-API ansprechbar sein. Sollte die
 Installation
 
 Die Javascript-Datei sowie die Stylesheet-Datei müssen am gleichen Ort wie die anderen für die Darstellung der Webseite benötigten Dateien abgelegt werden.
-
 Damit die Javascript-Datei korrekt arbeitet, müssen folgende zwei Zeilen Code in die Header-Section der auszuliefernden Webseite eingebunden werden:
 
 < link href="rvk_style.css" type="text/css" rel="stylesheet" >
