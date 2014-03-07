@@ -29,8 +29,9 @@ Bayerische Bibliotheksverbund (BVB)
 Kooperative Bibliotheksverbund Berlin-Brandenburg (KOBV)
 - Generalisierung des Javascript-Codes
 - Anpassungen des Codes an die RVK-API (Live-Schaltung Juni 2013)
-- Test des Codes mit verschiedenen Bibliotheken (UB Regensburg, TU Berlin)
-- Veröffentlichung, Dokumentation
+- Test des Codes mit den Pilotbibliotheken UB Regensburg (SISIS) und TU Berlin (PRIMO)
+- Dokumentation
+- Veröffentlichung
 
 
 
