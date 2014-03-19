@@ -122,7 +122,7 @@ _____________________________________________________
 
 Release/ Freigabe
 
-Der Code gemeinsam mit einer Kurzdokumentation wird freigegeben unter der Lizenz GNU GPLv3.
+Der Code gemeinsam mit einer Kurzdokumentation wird freigegeben unter der MIT Lizenz.
 
 
 
