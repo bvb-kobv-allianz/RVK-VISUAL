@@ -18,15 +18,15 @@ visualisieren: Mit Hilfe eines Javascript-Snippets und der von der UB-Regensburg
 
 Projektträger
 
-Die Realisierung des Projekts erfolgt im Rahmen der gemeinsamen Entwicklungsprojekte der strategischen Allianz (Dez. 2007) zwischen Bayerischem Bibliotheksverbund (BVB) und Kooperativem Bibliotheksverbund Berlin-Brandenburg (KOBV).
+Die Realisierung des Projekts erfolgt im Rahmen der gemeinsamen Entwicklungsprojekte der strategischen Allianz (Dez. 2007) zwischen Bibliotheksverbund Bayern (BVB) und Kooperativem Bibliotheksverbund Berlin-Brandenburg (KOBV).
 
 Arbeitsverteilung im Projekt
 
-Bayerische Bibliotheksverbund (BVB)
+Bibliotheksverbund Bayern (BVB)
 - Erstellung von Links zur direkten Nachrecherche (Lateralsuche) von RVK-Notationen
 - textliche Visualisierung der RVK-Notation durch ein Javascript-Snippet
 
-Kooperative Bibliotheksverbund Berlin-Brandenburg (KOBV)
+Kooperativer Bibliotheksverbund Berlin-Brandenburg (KOBV)
 - Generalisierung des Javascript-Codes
 - Anpassungen des Codes an die RVK-API (Live-Schaltung Juni 2013)
 - Test des Codes mit den Pilotbibliotheken UB Regensburg (SISIS) und TU Berlin (PRIMO)
