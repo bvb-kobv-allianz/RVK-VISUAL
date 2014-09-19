@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+    <title>RVK Visual Demo Page</title>
+
+    <link href="rvk_style.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="http://code.jquery.com/jquery-ui-1.9.2.custom.min.css" type="text/css"/>
+
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="application/javascript"></script>
+    <script src="http://code.jquery.com/jquery-ui-1.9.2.custom.min.js" type="application/javascript"></script>
+    <script src="rvk-visual.js" type="application/javascript"></script>
+
+    <script type="application/javascript">
+        var rvkResolver = new RvkResolver();
+
+        // Open/Close auf der Notation
+        var rvkResolver2 = new RvkResolver('rvklink2', 'rvkResolver2');
+        rvkResolver2.displayHierarchy = true;
+
+        var rvkResolver3 = new RvkResolver('rvklink3', 'rvkResolver3');
+        rvkResolver3.displayHierarchy = true;
+
+        var rvkVisual4 = new RvkResolver('rvklink4', 'rvkVisual4');
+        rvkVisual4.displayHierarchy = true;
+        rvkVisual4.toggleEnabled = true;
+        rvkVisual4.getNotationLink = function(notation) {
+            return "http://rvk.uni-regensburg.de/rvko_simple/mynot.php?nt_in=" + encodeURIComponent(notation);
+        }
+
+
+        window.addEventListener("load", function () {
+            rvkResolver.prepareLinks();
+            rvkResolver2.prepareLinks();
+            rvkResolver3.prepareLinks();
+            rvkVisual4.prepareLinks();
+        }, false);
+    </script>
+
+    <style rel="stylesheet">
+        body {
+            background: none repeat scroll 0 0 #FFFFFF;
+            font: 200 14px/120% 'Source Sans Pro', 'Helvetica Neue', Arial, Geneva, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+
+        .rvklink {
+            clear: both;
+        }
+
+        p.description {
+            font-style: italic;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h1>RVK Visual Demo Page</h1>
+
+<div id="example_ignore">
+    <h2>Beispiel RVK Notationen</h2>
+
+    <p>In diesem Beispiel wurden die RVK Elemente nicht markiert und werden nicht verarbeitet.</p>
+
+    <div class='rvk'>AB 3300 - Ungültige Notation</div> <!-- Keine gültige RVK Notation -->
+    <div class="rvk">PZ 3300</div>
+    <div class="rvk">PZ 4400</div>
+</div>
+
+<div id="example1">
+    <h2>Beispiel 1 - Benennung</h2>
+
+    <p class="description">Im ersten Beispiel wird nur die Benennung zur Notation hinzugefügt.</p>
+
+    <div class='rvklink'>AB 3300</div> <!-- Keine gültige RVK Notation -->
+    <div class='rvklink'>PZ 3300</div>
+    <div class='rvklink'>PZ 4400</div>
+
+    <!-- TODO Test of duplicate occurence of RVK notation. -->
+    <div class='rvklink'>PZ 3300</div>
+</div>
+
+<div id="example2">
+    <h2>Beispiel 2 - Volle Benennung und Übergeordnete Notationen</h2>
+
+    <div class='rvklink2'>PZ 3300</div>
+    <div class='rvklink2'>PZ 4400</div>
+</div>
+
+<!-- TODO Test of optional linking of RVK details. -->
+<div id="example3">
+    <h2>Beispiel 3 - Hierarchy mit Links</h2>
+
+    <div class='rvklink3'>PZ 3300</div>
+    <div class='rvklink3'>PZ 4400</div>
+</div>
+
+<!-- TODO RVK expansion + hierarchy + links + icons -->
+<div id="example4">
+    <h2>Beispiel 4 - Hierarchy mit Links und Icons</h2>
+
+    <p class="description">Dieses Beispiel verwendet jQuery für die Icons.</p>
+
+    <div class='rvklink4'>PZ 3300</div>
+    <div class='rvklink4'>PZ 4400</div>
+</div>
+
+</body>
+
+</html>
