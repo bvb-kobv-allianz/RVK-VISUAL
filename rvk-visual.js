@@ -1,20 +1,9 @@
 /*
- * RVK Link visualization for the jsonp api provided by UB Regensburg
+ * RVK Visual for expanding RVK notations using the jsonp api provided by UB Regensburg.
  *
  * Copyright 2014 Zuse Institute Berlin
  *
- * TODO ohne jQuery?
  * TODO maybe a global registry of retrieved notation data that can be reused in different ways?
- * TODO support span instead of div
- * TODO ungültige notationen hervorheben
- * TODO keine Unterscheidung zwischen tags für resolver 1 und 4
- *
- * Notes:
- *
- * It seems that at least in chromium identical scripts are included only once.
- *
- * TODO find out why parseData is called only twice
- *
  */
 
 /**
@@ -26,18 +15,42 @@
 var RvkVisual = RvkVisual || {};
 
 /**
- * TODO
+ * Value for appending toggle HTML to primary RVK notation.
+ * @type {number} Used as constant
+ */
+RvkVisual.prototype.APPEND = 0;
+
+/**
+ * Value for wrapping toggle HTML around primary RVK notation.
+ * @type {number} Used as constant
+ */
+RvkVisual.prototype.WRAP = 1;
+
+/**
+ * Konstruiert eine RvkVisual Instanz mit Defaultwerten für die Eigenschaften.
  * @constructor
  */
-function RvkResolver(rvkClassName, callbackVarName) {
+function RvkVisual(rvkClassName, callbackVarName) {
+    this.togglePosition = RvkVisual.prototype.APPEND;
     this.rvkUrl = "http://rvk.uni-regensburg.de/api/json/ancestors/";
-    this.callbackVarName = (callbackVarName !== undefined) ? callbackVarName : 'rvkResolver';
-    this.callbackFuncName = "parseData";
-
+    this.callbackVarName = (callbackVarName !== undefined) ? callbackVarName : 'rvkVisual';
+    this.callbackFuncName = 'parseData';
+    this.rvkTagName = 'div';
     this.rvkClassName = (rvkClassName !== undefined) ? rvkClassName : 'rvklink';
+    this.cssClassHierarchy = 'rvk-visual-details';
+    this.cssClassList = 'rvk-visual-list';
+    this.cssClassToggle = 'rvk-visual-toggle';
+    this.htmlListItemPrefix = '<ul><li>';
+    this.htmlListItemSeparator = '';
+    this.htmlListItemSuffix = '</li></ul>';
+    this.htmlToggleStart = '<div class="rvk-visual-toggle">';
+    this.htmlToggleEnd = '</div>';
+    this.htmlToggleOn = null;
+    this.htmlToggleOff = null;
     this.displayHierarchy = false;
     this.toggleEnabled = false;
-    this.debug = true; // TODO as prototype? default false
+    this.highlightErrorsEnabled = false;
+    this.debug = false; // TODO as prototype? default false
 }
 
 /**
@@ -46,7 +59,7 @@ function RvkResolver(rvkClassName, callbackVarName) {
  * Using the object 'rvkTags' to hold the found tags, ignores duplicate occurrences of the same notation, so that
  * every notation is only requested once from the RVK service.
  */
-RvkResolver.prototype.prepareLinks = function() {
+RvkVisual.prototype.prepareLinks = function() {
     var rvkNotations = {}; // empty object
 
     // get all RVK tags
@@ -73,15 +86,15 @@ RvkResolver.prototype.prepareLinks = function() {
  * Finds all RVK tags on page.
  * @returns {Array} Array of RVK elements
  */
-RvkResolver.prototype.getTags = function() {
-    var arr = document.getElementsByTagName("div");
+RvkVisual.prototype.getTags = function() {
+    var arr = document.getElementsByTagName(this.rvkTagName);
 
     var rvkTags = new Array();
 
     // find all RVK tags
     for (var i = 0; i < arr.length; i++) {
         var tagObj = arr[i];
-        if (tagObj.className === this.rvkClassName) {
+        if (this.hasClass(tagObj, this.rvkClassName)) {
             rvkTags.push(tagObj);
         }
     }
@@ -96,7 +109,7 @@ RvkResolver.prototype.getTags = function() {
  * service. The script contains the metadata for a RVK notation wrapped in a function call for processing the data
  * in the browser.
  */
-RvkResolver.prototype.getData = function(notation) {
+RvkVisual.prototype.getData = function(notation) {
     var url = this.rvkUrl + notation + "?jsonp=" + this.callbackVarName + "." + this.callbackFuncName;
     var script = document.createElement('script');
     script.setAttribute('src', url);
@@ -109,7 +122,7 @@ RvkResolver.prototype.getData = function(notation) {
  * @param response
  * TODO disconnect data parsing from visualization, so the same data can be reused in different ways
  */
-RvkResolver.prototype.parseData = function(data) {
+RvkVisual.prototype.parseData = function(data) {
     if (this.debug) {
         console.log('parseData');
     }
@@ -119,7 +132,18 @@ RvkResolver.prototype.parseData = function(data) {
             var arr = [ ];
             arr = this.getPathAsArray(rvkObj.node, "benennung");
             var notation = this.getPathAsArray(rvkObj.node, "notation");
-            this.visualize(arr, notation);
+            this.render(arr, notation);
+        }
+        else {
+            if (this.highlightErrorsEnabled) {
+                var result = rvkObj.request.match(/\/[^\/?]*\?/g);
+                notation = result[0].substring(1, result[0].length - 1);
+                notation = notation.replace(/\+/g, ' ');
+                if (this.debug) {
+                    console.log('Error finding: ' + notation);
+                }
+                this.renderError(notation);
+            }
         }
     }
     catch (ex) {
@@ -128,13 +152,11 @@ RvkResolver.prototype.parseData = function(data) {
 }
 
 /**
- *
+ * Erzeugt das HTML für die erweiterte Anzeige einer RVK Notation.
  * @param rvk_names Benennung der RVK Notationen
  * @param notation RVK Notationen
- *
- * TODO make HTML output configurable
  */
-RvkResolver.prototype.visualize = function(rvk_names, notation) {
+RvkVisual.prototype.render = function(rvk_names, notation) {
     if (this.debug) {
         console.log(rvk_names);
         console.log(notation);
@@ -145,28 +167,32 @@ RvkResolver.prototype.visualize = function(rvk_names, notation) {
     var rvkId = notation[0].replace(/\ /, "-"); // TODO what does it do?
 
     if (this.displayHierarchy) {
-        rvkString += "<div class='rvk_accordion'>";
+        rvkString += "<div class='" + this.cssClassHierarchy + "'>";
     }
-    rvkString += this.getNotationHtml(notation[0], rvk_names[0], "style=\"float:left;padding-right:0.5em;\"");
+
+    var notationHtml = this.getNotationHtml(notation[0], rvk_names[0]);
 
     if (this.displayHierarchy && this.toggleEnabled) {
-        rvkString += "<span class='ui-icon ui-icon-circle-plus' style='display: inline-block;'></span>";
+         notationHtml = this.renderToggle(notationHtml);
     }
 
+    rvkString += notationHtml;
+
     if (this.displayHierarchy) {
-        rvkString += "<div id='" + rvkId + "' class='rvk_list'>";
+        rvkString += "<div id='" + rvkId + "' class='" + this.cssClassList + "'>";
 
         for (var i = 1; i < rvk_names.length; i++) {
-            rvkString += "<ul><li>";
+            rvkString += this.htmlListItemPrefix;
             rvkString += this.getNotationHtml(notation[i], rvk_names[i]);
-            rvkString += "</li>";
-            listEnd += "</ul>";
+            if (i < rvk_names.length - 1) {
+                rvkString += this.htmlListItemSeparator;
+            }
+            listEnd += this.htmlListItemSuffix;
         }
         rvkString += listEnd + "</div>";
 
         rvkString += "</div>";
     }
-
 
     var rvkLinksArray = this.getTagsForNotation(notation[0]);
 
@@ -176,36 +202,109 @@ RvkResolver.prototype.visualize = function(rvk_names, notation) {
 
         rvklink.innerHTML = rvkString;
 
-        // Adding toggle function to icons
-        var toggleIcon = $(rvklink).find("span");
-        toggleIcon.on('click', function () {
-            var elem = $($(this).context.parentNode).find(".rvk_list");
+        // Adding toggle function
+        var toggleIcon = rvklink.getElementsByClassName(this.cssClassToggle);
+        if (toggleIcon[0] !== undefined) {
+            toggleIcon[0].onclick = this.toggleDetails;
+            toggleIcon[0].rvkVisual = this;
+        }
+    }
+}
 
-            if (this.debug) {
-                console.log("Toggle:");
-                console.log(elem);
-            }
+RvkVisual.prototype.renderError = function(notation) {
+    var rvkElements = this.getTagsForNotation(notation);
 
-            var visible = elem.toggle().is(":visible"); // Show/Hide RVK list
-
-            if (this.debug) console.log(visible ? 'Visible' : 'Hidden');
-
-            this.className = ( visible ) ? "ui-icon ui-icon-circle-minus" : "ui-icon ui-icon-circle-plus";
-        });
+    for (var i = 0; i < rvkElements.length; i++) {
+        rvkElements[i].innerHTML = '<div class="' + this.cssClassHierarchy + ' error">' + notation + '</div>';
     }
 }
 
 /**
- *
+ * Rendert das HTML für das Toggle-Element, um die List der Notation ein- bzw. auszublenden.
+ * @param content
+ * @returns {string}
  */
-RvkResolver.prototype.getTagsForNotation = function(notation) {
+RvkVisual.prototype.renderToggle = function(content) {
+    switch (this.togglePosition) {
+        case RvkVisual.WRAP:
+            return this.htmlToggleStart + content + this.htmlToggleEnd;
+        case RvkVisual.APPEND:
+        default:
+            return content + this.htmlToggleStart + this.htmlToggleOff + this.htmlToggleEnd;
+        break;
+    }
+}
+
+/**
+ * Blendet die Details, die übergeordneten Notation, ein- bzw. aus.
+ */
+RvkVisual.prototype.toggleDetails = function() {
+    var elem = this.parentNode.getElementsByClassName(this.rvkVisual.cssClassList);
+
+    if (this.debug) {
+        console.log("Toggle:");
+        console.log(elem);
+    }
+
+    var listDiv = elem[0];
+
+    if (this.rvkVisual.hasClass(listDiv, 'visible')) {
+        this.rvkVisual.removeClass(listDiv, 'visible')
+        if (this.rvkVisual.togglePosition == RvkVisual.prototype.APPEND && this.rvkVisual.htmlToggleOff !== null) {
+            this.innerHTML = this.rvkVisual.htmlToggleOff;
+        }
+    }
+    else {
+        this.rvkVisual.addClass(listDiv, 'visible');
+        if (this.rvkVisual.togglePosition == RvkVisual.prototype.APPEND && this.rvkVisual.htmlToggleOn !== null) {
+            this.innerHTML = this.rvkVisual.htmlToggleOn;
+        }
+    }
+}
+
+/**
+ * Adds a class to the className of an element.
+ * @param element
+ * @param className
+ */
+RvkVisual.prototype.addClass = function(element, className) {
+    if (!this.hasClass(element, className)) {
+        element.className = element.className + ' ' + className;
+    }
+}
+
+/**
+ * Removes a class from the className of an element.
+ * @param element
+ * @param className
+ */
+RvkVisual.prototype.removeClass = function(element, className) {
+   var classes = ' ' + element.className + ' ';
+   classes = classes.replace(' ' + className + ' ', '');
+   element.className = classes.trim();
+}
+
+/**
+ * Checks if an element has a classname.
+ * @param element
+ * @param className
+ * @returns {boolean}
+ */
+RvkVisual.prototype.hasClass = function(element, className) {
+    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+}
+
+/**
+ * TODO
+ */
+RvkVisual.prototype.getTagsForNotation = function(notation) {
     var rvkLinksArray = document.getElementsByName(notation);
 
     var tags = new Array();
 
     for (var i = 0; i < rvkLinksArray.length; i++) {
         var tagObj = rvkLinksArray[i];
-        if (tagObj.className === this.rvkClassName) {
+        if (this.hasClass(tagObj, this.rvkClassName)) {
             tags.push(tagObj);
         }
     }
@@ -214,16 +313,16 @@ RvkResolver.prototype.getTagsForNotation = function(notation) {
 }
 
 /**
- * TODO
+ * Gibt das HTML für die Anzeige einer RVK Notation zurück.
+ *
+ * @param notation String mit RVK Notation
+ * @param name String mit Benennung der RVK Notation
  */
-RvkResolver.prototype.getNotationHtml = function(notation, name, style) {
+RvkVisual.prototype.getNotationHtml = function(notation, name) {
     var rvkString = "";
     var searchLink = this.getNotationLink(notation);
     if (searchLink != null) {
-        rvkString += "<a href=\"" + searchLink + "\" "
-        if (style != null) {
-            rvkString += style
-        }
+        rvkString += "<a href=\"" + searchLink + "\" ";
         rvkString += ">";
     }
 
@@ -236,12 +335,15 @@ RvkResolver.prototype.getNotationHtml = function(notation, name, style) {
 }
 
 /**
- * TODO
+ * Liefert für eine RVK Notation einen Link zurück.
+ *
+ * Diese Funktion kann überschrieben werden, um in einer konkreten Instanz, z.B. Links zur Suche nach der RVK Notation
+ * zu integrieren.
  *
  * @param notation
  * @returns {string}
  */
-RvkResolver.prototype.getNotationLink = function(notation) {
+RvkVisual.prototype.getNotationLink = function(notation) {
     return null;
 }
 
@@ -251,7 +353,7 @@ RvkResolver.prototype.getNotationLink = function(notation) {
  * @param key
  * @returns {Array}
  */
-RvkResolver.prototype.getPathAsArray = function(node, key) {
+RvkVisual.prototype.getPathAsArray = function(node, key) {
     var arr = [ ];
     var rvk = node;
     while (rvk) {
@@ -266,9 +368,6 @@ RvkResolver.prototype.getPathAsArray = function(node, key) {
     }
     return arr;
 }
-
-
-
 
 
 

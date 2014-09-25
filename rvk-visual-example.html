@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+    <title>RVK Visual Beispiel</title>
+
+    <!-- Javascript fuer RvkVisual einbinden. -->
+    <script src="rvk-visual.js" type="application/javascript"></script>
+
+    <script type="application/javascript">
+        // Instanz von RvkVisual anlegen
+        // Der erste Parameter ist die CSS-Klasse, die RVK Notationen identifiziert.
+        // Der zweite Parameter ist der Name der Variable (Default: 'rvkVisual')
+        var rvkVisual = new RvkVisual('rvklink', 'rvkVisual');
+
+        // Instanz konfigurieren
+        rvkVisual.displayHierarchy = true;
+        rvkVisual.highlightErrorsEnabled = true;
+        rvkVisual.togglePosition = RvkVisual.WRAP;
+        rvkVisual.toggleEnabled = true;
+
+        // Beim Laden der Seite prepareLinks aufrufen
+        window.addEventListener("load", function () {
+            rvkVisual.prepareLinks();
+        }, false);
+    </script>
+
+    <!-- Stylesheet fuer RvkVisual einbinden. -->
+    <link href="rvk-visual.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<h1>RVK Visual Beispiel</h1>
+
+<div class='rvklink'>AB 3300</div> <!-- Keine gültige RVK Notation -->
+<div class='rvklink'>PZ 3300</div>
+<div class='rvklink'>PZ 4400</div>
+
+</body>
+
+</html>

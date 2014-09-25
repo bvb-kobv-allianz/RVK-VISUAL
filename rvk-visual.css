@@ -1,0 +1,22 @@
+/*
+ * RVK Visual for expanding RVK notations using the jsonp api provided by UB Regensburg.
+ *
+ * Copyright 2014 Zuse Institute Berlin
+ *
+ * Basic CSS definitions for RvkVisual.
+ */
+.rvk-visual-details.error {
+    color: red;
+}
+
+.rvk-visual-list {
+    display: none;
+}
+
+.rvk-visual-list.visible {
+    display: block;
+}
+
+.rvk-visual-toggle {
+    cursor: pointer;
+}
