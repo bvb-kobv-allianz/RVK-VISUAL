@@ -128,30 +128,59 @@ Header-Section der auszuliefernden Webseite eingebunden werden:
 <link href="rvk-visual.css" type="text/css" rel="stylesheet" />
 <script src="rvk-visual.js" type="application/javascript"></script>
 
+Zusätzlich muss etwas Javascript eingebunden werden, um ein RvkVisual Objekt zu
+instanzieren und konfigurieren. Anschließend muß während des Ladens der Seite
+die Funktion RvkVisual.prepareLinks aufgerufen werden. Die Datei rvk-visual.js
+selbst sollte nicht modifiziert werden, damit verbesserte Versionen später
+leicht eingepflegt werden können.
 
-CSS-Class
-Tag
+In den HTML Beispielen werden verschiedene Konfigurationsvarianten demonstriert.
+Es können mehrere Instanzen von RvkVisual auf einer Seite verwendet werden.
 
 
+Erzeugtes HTML
 
-Erklärungen
+Bei der Vorbereitung der RVK Links beim Laden der Seite passiert folgendes. Die
+gefundenen Elemente, die als RVK Links markiert wurden, werden durch erweitertes
+HTML ersetzt.
 
 <div class="rvklink">PZ 3300</div>
 
 wird umgewandelt in
 
 <div class="rvklink" name="PZ 3300">
-    <div class="rvk-visual-details">
-        PZ 3300: Schuldrecht, insbesondere Vertragsrecht
-        <div class="rvk-visual-list">
-            <ul>
-               <li>
-
-               </li>
-            </ul>
-        </div>
-    </div>
+   <div class="rvk-visual-details">
+      PZ 3300: Schuldrecht, insbesondere Vertragsrecht
+      <div class="rvk-visual-list">
+         <ul>
+            <li>PZ 3000 - PZ 3800: Computerrecht, EDV-Recht, Recht des Internet
+               <ul>
+                  <li>PZ: Datenverarbeitung und Recht
+                     <ul>
+                        <li>P: Rechtswissenschaft</li>
+                     </ul>
+                  </li>
+               </ul>
+            </li>
+         </ul>
+      </div>
+   </div>
 </div>
+
+
+Rendering von Links für Notationen
+
+Je nach Konfiguration können zusätzlich Links für die einzelnen Notationen
+gerendert werden. Dazu muss im Javascript rvkVisual.getNotationLink eine
+Funktion zugewiesen werden, die für eine Notation einen entsprechenden
+Link generiert. Auf diese Weise können zum Beispiel RVK-basierte Suchanfragen
+integriert werden.
+
+rvkVisual.getNotationLink = function(notation) {
+    return "http://rvk.uni-regensburg.de/rvko_simple/mynot.php?nt_in="
+        + encodeURIComponent(notation);
+}
+
 
 
 ________________________________________________________________________________

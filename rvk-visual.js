@@ -30,10 +30,9 @@ RvkVisual.prototype.WRAP = 1;
  * Konstruiert eine RvkVisual Instanz mit Defaultwerten für die Eigenschaften.
  * @constructor
  */
-function RvkVisual(rvkClassName, callbackVarName) {
+function RvkVisual(rvkClassName) {
     this.togglePosition = RvkVisual.prototype.APPEND;
     this.rvkUrl = "http://rvk.uni-regensburg.de/api/json/ancestors/";
-    this.callbackVarName = (callbackVarName !== undefined) ? callbackVarName : 'rvkVisual';
     this.callbackFuncName = 'parseData';
     this.rvkTagName = 'div';
     this.rvkClassName = (rvkClassName !== undefined) ? rvkClassName : 'rvklink';
@@ -56,8 +55,8 @@ function RvkVisual(rvkClassName, callbackVarName) {
 /**
  * Creates instance of RvkVisual.
  */
-RvkVisual.newInstance = function(rvkClassName, callbackVarName) {
-    var rvkVisual = new RvkVisual(rvkClassName, callbackVarName);
+RvkVisual.newInstance = function(rvkClassName) {
+    var rvkVisual = new RvkVisual(rvkClassName);
     var instances = null;
     if (RvkVisual.instances !== undefined) {
         instances = RvkVisual.instances;
