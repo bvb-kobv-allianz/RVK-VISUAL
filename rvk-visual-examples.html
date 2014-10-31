@@ -10,21 +10,24 @@
     <script src="rvk-visual.js" type="application/javascript"></script>
 
     <script type="application/javascript">
-        var rvkVisual = new RvkVisual();
+        // Example 1 - without additional configuration (using CSS-class 'rvklink')
+        var rvkVisual = RvkVisual.newInstance();
 
-        // Open/Close auf der Notation
-        var rvkVisual2 = new RvkVisual('rvklink2', 'rvkVisual2');
+        // Example 2 - configured to show RVK information directly on page
+        var rvkVisual2 = RvkVisual.newInstance('rvklink2');
         rvkVisual2.displayHierarchy = true;
         rvkVisual2.htmlListItemPrefix = '';
         rvkVisual2.htmlListItemSeparator = ' / ';
         rvkVisual2.htmlListItemSuffix = '';
 
-        var rvkVisual3 = new RvkVisual('rvklink3', 'rvkVisual3');
+        // Example 3 - configured to toggle visibilty of RVK information when user clicks on main notation
+        var rvkVisual3 = RvkVisual.newInstance('rvklink3');
         rvkVisual3.displayHierarchy = true;
         rvkVisual3.togglePosition = RvkVisual.WRAP;
         rvkVisual3.toggleEnabled = true;
 
-        var rvkVisual4 = new RvkVisual('rvklink4', 'rvkVisual4');
+        // Example 4 - configured to render links for notations and use separate icon for toggling
+        var rvkVisual4 = RvkVisual.newInstance('rvklink4');
         rvkVisual4.displayHierarchy = true;
         rvkVisual4.toggleEnabled = true;
         rvkVisual4.getNotationLink = function(notation) {
@@ -33,20 +36,17 @@
         rvkVisual4.htmlToggleOff = "<img src='images/plus.png' style='width: 12px'>";
         rvkVisual4.htmlToggleOn = "<img src='images/minus.png' style='width: 12px'>";
 
-        var rvkVisual5 = new RvkVisual('rvklink5', 'rvkVisual5');
+        // Example 5 - configured to look for link tags instead of DIV elements
+        var rvkVisual5 = RvkVisual.newInstance('rvklink5');
         rvkVisual5.rvkTagName = 'a';
 
-        var rvkVisual6 = new RvkVisual('rvklink6', 'rvkVisual6');
+        // Example 6 - configured to highlight notations that could not be found
+        var rvkVisual6 = RvkVisual.newInstance('rvklink6');
         rvkVisual6.highlightErrorsEnabled = true;
 
         // Load RVK data at page load
         function rvk_visual_prepareLinks() {
-            rvkVisual.prepareLinks();
-            rvkVisual2.prepareLinks();
-            rvkVisual3.prepareLinks();
-            rvkVisual4.prepareLinks();
-            rvkVisual5.prepareLinks();
-            rvkVisual6.prepareLinks();
+            RvkVisual.prepareLinks(); // loads data for all RvkVisual instances
         }
 
         // setup event listener in a way to not disturb other scripts (hopefully)

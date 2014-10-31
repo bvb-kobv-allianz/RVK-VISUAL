@@ -54,6 +54,35 @@ function RvkVisual(rvkClassName, callbackVarName) {
 }
 
 /**
+ * Creates instance of RvkVisual.
+ */
+RvkVisual.newInstance = function(rvkClassName, callbackVarName) {
+    var rvkVisual = new RvkVisual(rvkClassName, callbackVarName);
+    var instances = null;
+    if (RvkVisual.instances !== undefined) {
+        instances = RvkVisual.instances;
+        instances.push(rvkVisual);
+    }
+    else {
+        instances = new Array();
+        instances.push(rvkVisual);
+        RvkVisual.instances = instances;
+    }
+    rvkVisual.callbackVarName = 'RvkVisual.instances[' + (instances.length - 1) + ']';
+    return  rvkVisual;
+}
+
+/**
+ * Prepares HTML to load RVK data for all instances of RvkVisual.
+ */
+RvkVisual.prepareLinks = function() {
+    var instances = RvkVisual.instances;
+    for (var index in instances) {
+        instances[index].prepareLinks();
+    }
+}
+
+/**
  * Finds all the RVK notations on the page and adds scripts for getting the RVK data from the service.
  *
  * Using the object 'rvkTags' to hold the found tags, ignores duplicate occurrences of the same notation, so that
@@ -211,6 +240,11 @@ RvkVisual.prototype.render = function(rvk_names, notation) {
     }
 }
 
+/**
+ * Renders notations marked that could not be found.
+ * TODO make error CSS class configurable
+ * @param notation
+ */
 RvkVisual.prototype.renderError = function(notation) {
     var rvkElements = this.getTagsForNotation(notation);
 

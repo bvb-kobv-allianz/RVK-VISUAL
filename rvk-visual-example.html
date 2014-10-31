@@ -14,7 +14,7 @@
         // Instanz von RvkVisual anlegen
         // Der erste Parameter ist die CSS-Klasse, die RVK Notationen identifiziert.
         // Der zweite Parameter ist der Name der Variable (Default: 'rvkVisual')
-        var rvkVisual = new RvkVisual('rvklink', 'rvkVisual');
+        var rvkVisual = RvkVisual.newInstance('rvklink');
 
         // Instanz konfigurieren
         rvkVisual.displayHierarchy = true;
@@ -24,7 +24,7 @@
 
         // Beim Laden der Seite prepareLinks aufrufen
         window.addEventListener("load", function () {
-            rvkVisual.prepareLinks();
+            RvkVisual.prepareLinks();
         }, false);
     </script>
 
