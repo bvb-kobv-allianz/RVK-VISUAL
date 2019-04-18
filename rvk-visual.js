@@ -96,11 +96,11 @@ RvkVisual.prototype.prepareLinks = function() {
     // extract notation from tags
     for (var i = 0; i < rvkTags.length; i++) {
         var tagObj = rvkTags[i];
-        var rvkTag = tagObj.innerHTML;
+        var rvkTag = tagObj.textContent;
         rvkTag = rvkTag.replace(/\ /, "+");
-        tagObj.setAttribute("name", tagObj.innerHTML);
+        tagObj.setAttribute("name", tagObj.textContent);
         rvkNotations[rvkTag] = true; // add attribute to object, if it already exists overwrite
-        if (this.debug) console.log("InnerText: " + tagObj.innerHTML);
+        if (this.debug) console.log("InnerText: " + tagObj.textContent);
     }
 
     // requests data from service
