@@ -96,9 +96,9 @@ RvkVisual.prototype.prepareLinks = function() {
     // extract notation from tags
     for (var i = 0; i < rvkTags.length; i++) {
         var tagObj = rvkTags[i];
-        var rvkTag = tagObj.textContent;
+        var rvkTag = tagObj.textContent.toUpperCase();
         rvkTag = rvkTag.replace(/\ /, "+");
-        tagObj.setAttribute("name", tagObj.textContent);
+        tagObj.setAttribute("name", tagObj.textContent.toUpperCase());
         rvkNotations[rvkTag] = true; // add attribute to object, if it already exists overwrite
         if (this.debug) console.log("InnerText: " + tagObj.textContent);
     }
@@ -186,6 +186,7 @@ RvkVisual.prototype.parseData = function(data) {
  */
 RvkVisual.prototype.render = function(rvk_names, notation) {
     if (this.debug) {
+	console.log("render");
         console.log(rvk_names);
         console.log(notation);
     }
